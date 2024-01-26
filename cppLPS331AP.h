@@ -11,6 +11,8 @@ public:
   void enableDefault();
   bool checkStatus();
   int32_t readPressureRaw();
+  float readPressureMillibars();
+  float readPressureInchesHg();
 
 private:
   int gpio_commander;

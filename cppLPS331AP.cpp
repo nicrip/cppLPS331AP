@@ -80,9 +80,21 @@ int32_t LPS331AP::readPressureRaw() {
 
     // combine chars
     int32_t raw_pressure = (int32_t)(int8_t)rbuf[2] << 16 | (uint16_t)rbuf[1] << 8 | rbuf[0];
-    std::cout << raw_pressure << std::endl;
-
+    return raw_pressure;
 }
+
+float LPS331AP::readPressureMillibars()
+{
+    float mbar_pressure = (float)readPressureRaw()/4096;
+    return mbar_pressure;
+}
+
+float LPS331AP::readPressureInchesHg()
+{
+    float inHg_pressure = (float)readPressureRaw()/138706.5;
+    return inHg_pressure; 
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -91,7 +103,7 @@ int main(int argc, char *argv[])
   lps331ap.enableDefault();
   while(1) {
     if (lps331ap.checkStatus()) {
-        lps331ap.readPressureRaw();
+        std::cout << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
     }
   }
 // 	ms5837.setModel(MS5837::MS5837_30BA);
