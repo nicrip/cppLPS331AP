@@ -14,6 +14,8 @@ public:
   float readPressureMillibars();
   float readPressureInchesHg();
   int16_t readTemperatureRaw();
+  float readTemperatureCelsius();
+  float readTemperatureFahrenheit();
 
 private:
   int gpio_commander;

@@ -95,17 +95,31 @@ float LPS331AP::readPressureInchesHg()
     return inHg_pressure; 
 }
 
-int16_t LPS331AP::readTemperatureRaw(void)
+int16_t LPS331AP::readTemperatureRaw()
 {
     buf[0] = (LPS331AP_REG_TEMP_OUT_L | (1 << 7));
     i2c_write_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_L, buf, 1);
-    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_L, &rbuf[1], 1);
-    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_H, &rbuf[2], 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_L, &rbuf[0], 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_H, &rbuf[1], 1);
 
     // combine chars
     int32_t raw_temperature = (int16_t)rbuf[1] << 8 | rbuf[0];
     return raw_temperature;
 }
+
+float LPS331AP::readTemperatureCelsius()
+{
+    float celsius_temperature = 42.5 + (float)readTemperatureRaw()/480;
+    return celsius_temperature;
+}
+
+// reads temperature in degrees F
+float LPS331AP::readTemperatureFahrenheit()
+{
+    float fahrenheit_temperature = 108.5 + (float)readTemperatureRaw()/480 * 1.8;
+    return fahrenheit_temperature;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -115,7 +129,7 @@ int main(int argc, char *argv[])
   while(1) {
     if (lps331ap.checkStatus()) {
         std::cout << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
-        std::cout << lps331ap.readTemperatureRaw() << std::endl;
+        std::cout << lps331ap.readTemperatureCelsius() << " | " << lps331ap.readTemperatureFahrenheit() << std::endl;
     }
   }
 // 	ms5837.setModel(MS5837::MS5837_30BA);
