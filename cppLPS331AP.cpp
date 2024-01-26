@@ -95,6 +95,17 @@ float LPS331AP::readPressureInchesHg()
     return inHg_pressure; 
 }
 
+int16_t LPS331AP::readTemperatureRaw(void)
+{
+    buf[0] = (LPS331AP_REG_TEMP_OUT_L | (1 << 7));
+    i2c_write_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_L, buf, 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_L, &rbuf[1], 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_TEMP_OUT_H, &rbuf[2], 1);
+
+    // combine chars
+    int32_t raw_temperature = (int16_t)rbuf[1] << 8 | rbuf[0];
+    return raw_temperature;
+}
 
 int main(int argc, char *argv[])
 {
@@ -104,6 +115,7 @@ int main(int argc, char *argv[])
   while(1) {
     if (lps331ap.checkStatus()) {
         std::cout << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
+        std::cout << lps331ap.readTemperatureRaw() << std::endl;
     }
   }
 // 	ms5837.setModel(MS5837::MS5837_30BA);

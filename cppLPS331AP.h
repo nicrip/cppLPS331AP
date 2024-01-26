@@ -13,6 +13,7 @@ public:
   int32_t readPressureRaw();
   float readPressureMillibars();
   float readPressureInchesHg();
+  int16_t readTemperatureRaw();
 
 private:
   int gpio_commander;
