@@ -64,7 +64,25 @@ void LPS331AP::enableDefault() {
 
 bool LPS331AP::checkStatus() {
     i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_STATUS_REG, rbuf, 1);
-    std::cout << std::hex << rbuf << std::endl;
+    if (rbuf == 0) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+int32_t LPS331AP::readPressureRaw() {
+    buf[0] = (LPS331AP_REG_PRESS_OUT_XL | (1 << 7));
+    i2c_write_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_XL, buf, 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_XL, &rbuf[0], 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_L, &rbuf[1], 1);
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_H, &rbuf[2], 1);
+
+    std::cout << rbuf << std::endl;
+
+  // combine chars
+//   return (int32_t)(int8_t)ph << 16 | (uint16_t)pl << 8 | pxl;
+
 }
 
 int main(int argc, char *argv[])
@@ -73,7 +91,9 @@ int main(int argc, char *argv[])
   lps331ap.init();
   lps331ap.enableDefault();
   while(1) {
-    lps331ap.checkStatus();
+    if (lps331ap.checkStatus()) {
+        lps331ap.readPressureRaw();
+    }
   }
 // 	ms5837.setModel(MS5837::MS5837_30BA);
 //   ms5837.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)

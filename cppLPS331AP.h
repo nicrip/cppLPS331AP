@@ -10,6 +10,7 @@ public:
   bool init();
   void enableDefault();
   bool checkStatus();
+  int32_t readPressureRaw();
 
 private:
   int gpio_commander;
