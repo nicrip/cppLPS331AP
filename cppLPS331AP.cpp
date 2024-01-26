@@ -78,10 +78,9 @@ int32_t LPS331AP::readPressureRaw() {
     i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_L, &rbuf[1], 1);
     i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_PRESS_OUT_H, &rbuf[2], 1);
 
-    std::cout << rbuf << std::endl;
-
-  // combine chars
-//   return (int32_t)(int8_t)ph << 16 | (uint16_t)pl << 8 | pxl;
+    // combine chars
+    int32_t raw_pressure = (int32_t)(int8_t)rbuf[2] << 16 | (uint16_t)rbuf[1] << 8 | rbuf[0];
+    std::cout << raw_pressure << std::endl;
 
 }
 
