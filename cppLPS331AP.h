@@ -9,6 +9,7 @@ public:
   LPS331AP();
   bool init();
   void enableDefault();
+  bool checkStatus();
 
 private:
   int gpio_commander;

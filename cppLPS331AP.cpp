@@ -62,10 +62,19 @@ void LPS331AP::enableDefault() {
     i2c_write_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_CTRL_REG1, buf, 1);
 }
 
+bool LPS331AP::checkStatus() {
+    i2c_read_i2c_block_data(gpio_commander, i2c_handle, LPS331AP_REG_STATUS_REG, rbuf, 1);
+    std::cout << std::hex << rbuf << std::endl;
+}
+
 int main(int argc, char *argv[])
 {
   LPS331AP lps331ap;
   lps331ap.init();
+  lps331ap.enableDefault();
+  while(1) {
+    lps331ap.checkStatus();
+  }
 // 	ms5837.setModel(MS5837::MS5837_30BA);
 //   ms5837.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)
 //   ms5837.setOverSampling(5);
