@@ -132,7 +132,6 @@ float LPS331AP::pressureToAltitudeFeet(float pressure_inHg, float altimeter_sett
   return (1 - pow(pressure_inHg / altimeter_setting_inHg, 0.190263)) * 145442;
 }
 
-
 int main(int argc, char *argv[])
 {
   LPS331AP lps331ap;
