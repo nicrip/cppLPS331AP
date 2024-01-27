@@ -26,15 +26,6 @@ private:
   float temperature;
   float pressure;
   float altitude;
-
-  float fluidDensity;
-
-  /** Performs calculations per the sensor data sheet for conversion and
-   *  second order compensation.
-   */
-  void calculate();
-
-  uint8_t crc4(uint16_t n_prom[]);
 };
 
 #endif

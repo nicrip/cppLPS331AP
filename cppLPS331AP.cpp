@@ -119,28 +119,3 @@ float LPS331AP::readTemperatureFahrenheit()
     float fahrenheit_temperature = 108.5 + (float)readTemperatureRaw()/480 * 1.8;
     return fahrenheit_temperature;
 }
-
-
-int main(int argc, char *argv[])
-{
-  LPS331AP lps331ap;
-  lps331ap.init();
-  lps331ap.enableDefault();
-  while(1) {
-    if (lps331ap.checkStatus()) {
-        std::cout << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
-        std::cout << lps331ap.readTemperatureCelsius() << " | " << lps331ap.readTemperatureFahrenheit() << std::endl;
-    }
-  }
-// 	ms5837.setModel(MS5837::MS5837_30BA);
-//   ms5837.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)
-//   ms5837.setOverSampling(5);
-// 	while(1) {
-// 		ms5837.read();
-
-// 		std::cout << "Pressure: " << ms5837.pressure() << " mbar" << std::endl;
-// 		std::cout << "Temperature: " << ms5837.temperature() << " deg C" << std::endl;
-// 		std::cout << "Depth: " << ms5837.depth() << " m" << std::endl;
-// 		std::cout << "Altitude: " << ms5837.altitude() << " m above mean sea level" << std::endl << std::endl;
-// 	}
-}
