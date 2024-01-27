@@ -51,6 +51,7 @@ bool LPS331AP::init() {
         std::cout << "i2c bus could not be opened... Exiting." << std::endl;
         exit(0);
     }
+    return true;
 }
 
 void LPS331AP::enableDefault() {
@@ -120,6 +121,17 @@ float LPS331AP::readTemperatureFahrenheit()
     return fahrenheit_temperature;
 }
 
+float LPS331AP::pressureToAltitudeMeters(float pressure_mbar, float altimeter_setting_mbar)
+{
+  return (1 - pow(pressure_mbar / altimeter_setting_mbar, 0.190263)) * 44330.8;
+}
+
+// converts pressure in inHg to altitude in feet; see notes above
+float LPS331AP::pressureToAltitudeFeet(float pressure_inHg, float altimeter_setting_inHg)
+{
+  return (1 - pow(pressure_inHg / altimeter_setting_inHg, 0.190263)) * 145442;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -128,19 +140,9 @@ int main(int argc, char *argv[])
   lps331ap.enableDefault();
   while(1) {
     if (lps331ap.checkStatus()) {
-        std::cout << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
-        std::cout << lps331ap.readTemperatureCelsius() << " | " << lps331ap.readTemperatureFahrenheit() << std::endl;
+        std::cout << "pressure: " << lps331ap.readPressureMillibars() << " | " << lps331ap.readPressureInchesHg() << std::endl;
+        std::cout << "temperature: " << lps331ap.readTemperatureCelsius() << " | " << lps331ap.readTemperatureFahrenheit() << std::endl;
+        std::cout << "altitude: " << lps331ap.pressureToAltitudeMeters(lps331ap.readPressureMillibars()) << " | " << lps331ap.pressureToAltitudeFeet(lps331ap.readPressureInchesHg()) << std::endl << std::endl;
     }
   }
-// 	ms5837.setModel(MS5837::MS5837_30BA);
-//   ms5837.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)
-//   ms5837.setOverSampling(5);
-// 	while(1) {
-// 		ms5837.read();
-
-// 		std::cout << "Pressure: " << ms5837.pressure() << " mbar" << std::endl;
-// 		std::cout << "Temperature: " << ms5837.temperature() << " deg C" << std::endl;
-// 		std::cout << "Depth: " << ms5837.depth() << " m" << std::endl;
-// 		std::cout << "Altitude: " << ms5837.altitude() << " m above mean sea level" << std::endl << std::endl;
-// 	}
 }
