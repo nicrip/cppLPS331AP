@@ -51,6 +51,7 @@ bool LPS331AP::init() {
         std::cout << "i2c bus could not be opened... Exiting." << std::endl;
         exit(0);
     }
+    return true;
 }
 
 void LPS331AP::enableDefault() {
@@ -118,4 +119,15 @@ float LPS331AP::readTemperatureFahrenheit()
 {
     float fahrenheit_temperature = 108.5 + (float)readTemperatureRaw()/480 * 1.8;
     return fahrenheit_temperature;
+}
+
+float LPS331AP::pressureToAltitudeMeters(float pressure_mbar, float altimeter_setting_mbar)
+{
+  return (1 - pow(pressure_mbar / altimeter_setting_mbar, 0.190263)) * 44330.8;
+}
+
+// converts pressure in inHg to altitude in feet; see notes above
+float LPS331AP::pressureToAltitudeFeet(float pressure_inHg, float altimeter_setting_inHg)
+{
+  return (1 - pow(pressure_inHg / altimeter_setting_inHg, 0.190263)) * 145442;
 }

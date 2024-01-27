@@ -16,6 +16,8 @@ public:
   int16_t readTemperatureRaw();
   float readTemperatureCelsius();
   float readTemperatureFahrenheit();
+  float pressureToAltitudeMeters(float pressure_mbar, float altimeter_setting_mbar = 1013.25);
+  float pressureToAltitudeFeet(float pressure_inHg, float altimeter_setting_inHg = 29.9213);
 
 private:
   int gpio_commander;
